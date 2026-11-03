@@ -1,0 +1,28 @@
+﻿@model EventVenue.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Confirmation";
+}
+
+<div class="container py-5">
+    <div class="card shadow-sm p-4 mx-auto" style="max-width:650px">
+        <h2 class="text-success">Booking Submitted!</h2>
+
+        <p>Your booking has been saved successfully.</p>
+
+        <hr />
+
+        <p><strong>Booking ID:</strong> @Model.BookingId</p>
+        <p><strong>Venue:</strong> @Model.Venue?.VenueName</p>
+        <p><strong>Event:</strong> @Model.EventType</p>
+        <p><strong>Date:</strong> @Model.EventDate.ToString("dd MMM yyyy")</p>
+        <p><strong>Guests:</strong> @Model.GuestCount</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+
+        <a asp-controller="User"
+           asp-action="Index"
+           class="btn btn-primary mt-3">
+            Browse More Venues
+        </a>
+    </div>
+</div>

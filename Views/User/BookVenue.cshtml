@@ -1,0 +1,66 @@
+﻿@model EventVenue.Models.Booking
+
+@{
+    ViewData["Title"] = "Book Venue";
+    var venue = ViewBag.Venue as EventVenue.Models.Venue;
+}
+
+<div class="container py-5">
+    <h2>Book Your Venue</h2>
+
+    @if (venue != null)
+    {
+        <div class="card shadow-sm p-4 mt-3" style="max-width:600px">
+            <h4>@venue.VenueName</h4>
+            <p>Location: @venue.Location</p>
+            <p>Price: @venue.Price.ToString("N2")</p>
+
+            <form asp-action="BookVenue" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="VenueId" />
+
+                <div class="mb-3">
+                    <label asp-for="EventType" class="form-label">
+                        Event Type
+                    </label>
+                    <input asp-for="EventType" class="form-control"
+                           placeholder="Wedding, Birthday, etc." />
+                    <span asp-validation-for="EventType"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EventDate" class="form-label">
+                        Event Date
+                    </label>
+                    <input asp-for="EventDate" type="date"
+                           class="form-control" />
+                    <span asp-validation-for="EventDate"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GuestCount" class="form-label">
+                        Number of Guests
+                    </label>
+                    <input asp-for="GuestCount" type="number"
+                           class="form-control" />
+                    <span asp-validation-for="GuestCount"
+                          class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit Booking
+                </button>
+
+                <a asp-action="VenueDetails"
+                   asp-route-id="@venue.VenueId"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    }
+</div>

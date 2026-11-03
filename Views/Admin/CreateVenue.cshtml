@@ -1,0 +1,70 @@
+﻿@model EventVenue.Models.Venue
+
+@{
+    ViewData["Title"] = "Add Venue";
+}
+
+<div class="container mt-4">
+    <h2>Add New Venue</h2>
+
+    <form asp-action="CreateVenue" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="VenueName" class="form-label"></label>
+            <input asp-for="VenueName" class="form-control" />
+            <span asp-validation-for="VenueName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="VenueType" class="form-label"></label>
+            <input asp-for="VenueType" class="form-control"
+                   placeholder="Wedding Hall, Lawn, Resort..." />
+            <span asp-validation-for="VenueType" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Capacity" class="form-label"></label>
+            <input asp-for="Capacity" type="number" class="form-control" />
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Price" class="form-label"></label>
+            <input asp-for="Price" type="number" step="0.01"
+                   class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageUrl" class="form-label">
+                Venue Image Path
+            </label>
+            <input asp-for="ImageUrl" class="form-control"
+                   placeholder="/images/venue.jpg" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="IsAvailable" class="form-check-input" />
+            <label asp-for="IsAvailable" class="form-check-label">
+                Available for booking
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Venue</button>
+        <a asp-action="Venues" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

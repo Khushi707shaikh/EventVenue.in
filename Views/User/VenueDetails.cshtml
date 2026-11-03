@@ -1,0 +1,68 @@
+﻿@model EventVenue.Models.Venue
+
+@{
+    ViewData["Title"] = "Venue Details";
+}
+
+<div class="container py-5">
+    <a asp-controller="User"
+       asp-action="Index"
+       class="btn btn-outline-secondary mb-4">
+        &larr; Back to Venues
+    </a>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl"
+                     alt="@Model.VenueName"
+                     class="img-fluid rounded shadow-sm w-100"
+                     style="max-height:450px; object-fit:cover;" />
+            }
+            else
+            {
+                <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                     style="height:350px;">
+                    No image available
+                </div>
+            }
+        </div>
+
+        <div class="col-md-6">
+            <h1>@Model.VenueName</h1>
+
+            <p class="text-muted">@Model.VenueType</p>
+
+            <h3 class="text-primary mb-4">
+                @Model.Price.ToString("N2")
+            </h3>
+
+            <p><strong>Location:</strong> @Model.Location</p>
+            <p><strong>Capacity:</strong> @Model.Capacity guests</p>
+            <p>
+                <strong>Availability:</strong>
+                @(Model.IsAvailable ? "Available" : "Unavailable")
+            </p>
+
+            <hr />
+
+            <h5>About This Venue</h5>
+            <p>
+                @(string.IsNullOrWhiteSpace(Model.Description)
+                ? "No description available."
+                : Model.Description)
+            </p>
+
+            @if (Model.IsAvailable)
+            {
+                <a asp-controller="User"
+                   asp-action="BookVenue"
+                   asp-route-id="@Model.VenueId"
+                   class="btn btn-primary btn-lg mt-3">
+                    Book This Venue
+                </a>
+            }
+        </div>
+    </div>
+</div>

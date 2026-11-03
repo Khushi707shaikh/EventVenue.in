@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "User Login";
+}
+
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto p-4" style="max-width: 450px;">
+        <h2 class="text-center mb-2">Welcome Back</h2>
+        <p class="text-center text-muted mb-4">
+            Sign in to continue to EventVenue.
+        </p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Error
+            </div>
+        }
+
+        <form asp-controller="User" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email"
+                       class="form-control"
+                       placeholder="Enter your email" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password"
+                       class="form-control"
+                       placeholder="Enter your password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Login
+            </button>
+
+            <p class="text-center mt-3 mb-0">
+                Don't have an account?
+                <a asp-controller="User" asp-action="Register">
+                    Register here
+                </a>
+            </p>
+        </form>
+    </div>
+</div>

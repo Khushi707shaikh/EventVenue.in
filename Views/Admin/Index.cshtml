@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <h1>EventVenue Admin Dashboard</h1>
+
+    <p>Welcome to the admin panel.</p>
+
+    <hr />
+
+    <h3>Venue Management</h3>
+
+    <p>
+        Add new venues, view existing venues,
+        edit venue details, or delete venues.
+    </p>
+
+    <a asp-controller="Admin"
+       asp-action="Venues"
+       class="btn btn-primary">
+        Manage Venues
+    </a>
+</div>

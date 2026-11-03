@@ -1,0 +1,73 @@
+﻿@model List<EventVenue.Models.Venue>
+
+@{
+    ViewData["Title"] = "Manage Venues";
+}
+
+<div class="container mt-4">
+    <h2>Manage Venues</h2>
+    <p>View and manage all event venues.</p>
+
+    <a asp-action="CreateVenue" class="btn btn-primary mb-3">
+        + Add New Venue
+    </a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Venue Name</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var venue in Model)
+                {
+                    <tr>
+                        <td>@venue.VenueId</td>
+                        <td>@venue.VenueName</td>
+                        <td>@venue.VenueType</td>
+                        <td>@venue.Location</td>
+                        <td>@venue.Capacity</td>
+                        <td>@venue.Price.ToString("C")</td>
+                        <td>@(venue.IsAvailable ? "Available" : "Unavailable")</td>
+                        <td>
+                            <a asp-action="EditVenue"
+                               asp-route-id="@venue.VenueId"
+                               class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <form asp-action="DeleteVenue"
+                                  asp-route-id="@venue.VenueId"
+                                  method="post"
+                                  class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Delete this venue?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8" class="text-center">
+                        No venues found. Click Add New Venue to get started.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

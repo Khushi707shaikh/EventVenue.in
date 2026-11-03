@@ -1,0 +1,68 @@
+﻿@model EventVenue.Models.Venue
+
+@{
+    ViewData["Title"] = "Edit Venue";
+}
+
+<div class="container mt-4">
+    <h2>Edit Venue</h2>
+
+    <form asp-action="EditVenue" asp-route-id="@Model.VenueId" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="VenueId" />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="VenueName" class="form-label"></label>
+            <input asp-for="VenueName" class="form-control" />
+            <span asp-validation-for="VenueName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="VenueType" class="form-label"></label>
+            <input asp-for="VenueType" class="form-control" />
+            <span asp-validation-for="VenueType" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location" class="form-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Capacity" class="form-label"></label>
+            <input asp-for="Capacity" type="number" class="form-control" />
+            <span asp-validation-for="Capacity" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Price" class="form-label"></label>
+            <input asp-for="Price" type="number" step="0.01"
+                   class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageUrl" class="form-label"></label>
+            <input asp-for="ImageUrl" class="form-control" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="IsAvailable" class="form-check-input" />
+            <label asp-for="IsAvailable" class="form-check-label">
+                Available for booking
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Venue</button>
+        <a asp-action="Venues" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

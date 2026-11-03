@@ -1,0 +1,1017 @@
+﻿@model IEnumerable<EventVenue.Models.Venue>
+
+@{
+    ViewData["Title"] = "EventVenue | Find Your Perfect Venue";
+
+    var isLoggedIn = Context.Session.GetInt32("AppUserId") != null;
+    var userName = Context.Session.GetString("AppUserName");
+
+    var venues = Model ?? Enumerable.Empty<EventVenue.Models.Venue>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventVenue | Find Your Perfect Venue</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <style>
+            :root {
+                --blue-dark: #123B68;
+                --blue: #2563EB;
+                --blue-light: #60A5FA;
+                --blue-soft: #DBEAFE;
+                --background: #F3F7FD;
+                --white: #FFFFFF;
+                --text: #172D45;
+                --muted: #64748B;
+                --border: #E2EAF4;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'DM Sans', sans-serif;
+                background: var(--background);
+                color: var(--text);
+            }
+
+            a {
+                text-decoration: none;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* NAVBAR */
+
+            .navbar {
+                min-height: 78px;
+                background: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 7%;
+                box-shadow: 0 3px 20px rgba(18, 59, 104, 0.06);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .brand {
+                font-size: 25px;
+                font-weight: 800;
+                color: var(--blue-dark);
+                letter-spacing: -1px;
+            }
+
+                .brand i {
+                    color: var(--blue);
+                    margin-right: 7px;
+                }
+
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 30px;
+            }
+
+                .nav-links a {
+                    color: #475569;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: 0.3s;
+                }
+
+                    .nav-links a:hover {
+                        color: var(--blue);
+                    }
+
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .btn-login {
+                color: var(--blue-dark);
+                font-weight: 700;
+                padding: 11px 18px;
+                border: 1px solid var(--border);
+                border-radius: 9px;
+            }
+
+            .btn-register {
+                background: var(--blue);
+                color: white;
+                padding: 12px 21px;
+                border-radius: 9px;
+                font-weight: 700;
+                transition: 0.3s;
+            }
+
+                .btn-register:hover,
+                .primary-btn:hover {
+                    background: var(--blue-dark);
+                    color: white;
+                    transform: translateY(-2px);
+                }
+
+            .welcome-user {
+                color: var(--blue-dark);
+                font-weight: 700;
+                font-size: 14px;
+            }
+
+            .logout-link {
+                background: #EFF6FF;
+                color: var(--blue-dark);
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-weight: 700;
+            }
+
+            /* HERO */
+
+            .hero {
+                min-height: 570px;
+                padding: 95px 7%;
+                display: flex;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                background: linear-gradient(90deg, rgba(9, 37, 73, 0.94), rgba(18, 59, 104, 0.75)), url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=2000&q=85') center/cover;
+            }
+
+            .hero-content {
+                max-width: 690px;
+                color: white;
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-tag {
+                display: inline-block;
+                padding: 9px 16px;
+                border-radius: 30px;
+                background: rgba(255,255,255,0.15);
+                border: 1px solid rgba(255,255,255,0.25);
+                font-size: 13px;
+                font-weight: 700;
+                margin-bottom: 25px;
+            }
+
+            .hero h1 {
+                font-family: 'Playfair Display', serif;
+                font-size: clamp(42px, 5.5vw, 68px);
+                line-height: 1.15;
+                margin-bottom: 22px;
+            }
+
+                .hero h1 span {
+                    color: #93C5FD;
+                }
+
+            .hero p {
+                color: #E2EAF4;
+                font-size: 17px;
+                line-height: 1.8;
+                max-width: 590px;
+                margin-bottom: 32px;
+            }
+
+            .primary-btn {
+                display: inline-block;
+                background: var(--blue);
+                color: white;
+                padding: 15px 27px;
+                border-radius: 9px;
+                font-weight: 700;
+                transition: 0.3s;
+            }
+
+            .secondary-btn {
+                display: inline-block;
+                color: white;
+                padding: 14px 25px;
+                border: 1px solid rgba(255,255,255,0.6);
+                border-radius: 9px;
+                margin-left: 10px;
+                font-weight: 700;
+            }
+
+            /* TRUST BAR */
+
+            .trust-bar {
+                background: white;
+                padding: 27px 7%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                box-shadow: 0 5px 20px rgba(18,59,104,0.04);
+            }
+
+            .trust-item {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 13px;
+            }
+
+            .trust-icon {
+                width: 45px;
+                height: 45px;
+                background: var(--blue-soft);
+                color: var(--blue);
+                border-radius: 12px;
+                display: grid;
+                place-items: center;
+                font-size: 21px;
+            }
+
+            .trust-item strong {
+                display: block;
+                font-size: 14px;
+            }
+
+            .trust-item small {
+                color: var(--muted);
+                font-size: 12px;
+            }
+
+            /* GENERAL SECTION */
+
+            .section {
+                padding: 85px 7%;
+            }
+
+            .section-heading {
+                text-align: center;
+                margin-bottom: 38px;
+            }
+
+                .section-heading .eyebrow {
+                    color: var(--blue);
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    font-weight: 800;
+                }
+
+                .section-heading h2 {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 38px;
+                    color: var(--blue-dark);
+                    margin: 10px 0;
+                }
+
+                .section-heading p {
+                    color: var(--muted);
+                    font-size: 15px;
+                }
+
+            /* SEARCH */
+
+            .search-panel {
+                max-width: 1050px;
+                margin: -45px auto 0;
+                background: white;
+                padding: 22px;
+                border-radius: 15px;
+                box-shadow: 0 15px 45px rgba(18,59,104,0.12);
+                position: relative;
+                z-index: 5;
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr auto;
+                gap: 13px;
+            }
+
+            .search-field {
+                background: #F8FAFC;
+                border: 1px solid var(--border);
+                border-radius: 9px;
+                padding: 0 13px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                .search-field i {
+                    color: var(--blue);
+                }
+
+                .search-field input,
+                .search-field select {
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    background: transparent;
+                    padding: 14px 0;
+                    color: var(--text);
+                    font-family: inherit;
+                    min-width: 0;
+                }
+
+            .search-button {
+                border: none;
+                background: var(--blue);
+                color: white;
+                border-radius: 9px;
+                padding: 0 24px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            /* VENUE CARDS */
+
+            .venue-section {
+                padding-top: 90px;
+            }
+
+            .venue-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 25px;
+            }
+
+            .venue-card {
+                background: white;
+                border-radius: 15px;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                box-shadow: 0 7px 25px rgba(18,59,104,0.05);
+                transition: 0.3s;
+            }
+
+                .venue-card:hover {
+                    transform: translateY(-7px);
+                    box-shadow: 0 16px 35px rgba(18,59,104,0.12);
+                }
+
+            .venue-image {
+                height: 220px;
+                position: relative;
+                background: #DBEAFE;
+                overflow: hidden;
+            }
+
+                .venue-image img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: 0.4s;
+                }
+
+            .venue-card:hover .venue-image img {
+                transform: scale(1.06);
+            }
+
+            .venue-type {
+                position: absolute;
+                top: 15px;
+                left: 15px;
+                background: white;
+                color: var(--blue-dark);
+                padding: 7px 12px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 800;
+            }
+
+            .venue-content {
+                padding: 21px;
+            }
+
+                .venue-content h3 {
+                    font-size: 19px;
+                    color: var(--blue-dark);
+                    margin-bottom: 9px;
+                }
+
+            .venue-location {
+                color: var(--muted);
+                font-size: 13px;
+                margin-bottom: 17px;
+            }
+
+                .venue-location i {
+                    color: var(--blue);
+                    margin-right: 5px;
+                }
+
+            .venue-info {
+                display: flex;
+                justify-content: space-between;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                padding: 14px 0;
+                margin-bottom: 17px;
+            }
+
+                .venue-info div {
+                    font-size: 12px;
+                    color: var(--muted);
+                }
+
+                .venue-info strong {
+                    display: block;
+                    color: var(--text);
+                    font-size: 14px;
+                    margin-top: 5px;
+                }
+
+            .venue-bottom {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .venue-price {
+                color: var(--blue);
+                font-size: 20px;
+                font-weight: 800;
+            }
+
+                .venue-price small {
+                    color: var(--muted);
+                    font-size: 11px;
+                    font-weight: 500;
+                }
+
+            .details-btn {
+                background: var(--blue-soft);
+                color: var(--blue-dark);
+                padding: 10px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+                .details-btn:hover {
+                    background: var(--blue);
+                    color: white;
+                }
+
+            .empty-message {
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 55px 20px;
+                background: white;
+                border-radius: 15px;
+                color: var(--muted);
+            }
+
+            /* HOW IT WORKS */
+
+            .steps-section {
+                background: white;
+            }
+
+            .steps-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+                margin-top: 45px;
+            }
+
+            .step-card {
+                text-align: center;
+                padding: 30px 24px;
+                background: #F8FAFC;
+                border-radius: 14px;
+                border: 1px solid var(--border);
+            }
+
+            .step-icon {
+                width: 65px;
+                height: 65px;
+                background: var(--blue-soft);
+                color: var(--blue);
+                display: grid;
+                place-items: center;
+                margin: 0 auto 20px;
+                border-radius: 18px;
+                font-size: 27px;
+            }
+
+            .step-card h3 {
+                font-size: 18px;
+                color: var(--blue-dark);
+                margin-bottom: 10px;
+            }
+
+            .step-card p {
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            /* CTA */
+
+            .cta-section {
+                padding: 70px 7%;
+            }
+
+            .cta-box {
+                background: linear-gradient(120deg, #123B68, #2563EB);
+                border-radius: 20px;
+                padding: 55px 35px;
+                text-align: center;
+                color: white;
+            }
+
+                .cta-box h2 {
+                    font-family: 'Playfair Display', serif;
+                    font-size: 35px;
+                    margin-bottom: 12px;
+                }
+
+                .cta-box p {
+                    color: #DBEAFE;
+                    margin-bottom: 25px;
+                }
+
+                .cta-box a {
+                    display: inline-block;
+                    background: white;
+                    color: var(--blue-dark);
+                    padding: 14px 25px;
+                    border-radius: 9px;
+                    font-weight: 800;
+                }
+
+            /* FOOTER */
+
+            footer {
+                background: #0B2340;
+                color: white;
+                padding: 45px 7% 20px;
+            }
+
+            .footer-content {
+                display: flex;
+                justify-content: space-between;
+                gap: 30px;
+                flex-wrap: wrap;
+                padding-bottom: 30px;
+            }
+
+            .footer-brand {
+                font-size: 23px;
+                font-weight: 800;
+                margin-bottom: 12px;
+            }
+
+            .footer-content p {
+                color: #B8C9DD;
+                font-size: 13px;
+                line-height: 1.8;
+                max-width: 350px;
+            }
+
+            .footer-links h4 {
+                margin-bottom: 13px;
+            }
+
+            .footer-links a {
+                display: block;
+                color: #B8C9DD;
+                font-size: 13px;
+                margin: 9px 0;
+            }
+
+            .footer-bottom {
+                border-top: 1px solid rgba(255,255,255,0.15);
+                padding-top: 18px;
+                text-align: center;
+                color: #B8C9DD;
+                font-size: 12px;
+            }
+
+            /* RESPONSIVE */
+
+            @@media (max-width: 1000px) {
+                .venue-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .search-panel {
+                    grid-template-columns: 1fr 1fr;
+                }
+
+                .search-button {
+                    min-height: 48px;
+                }
+            }
+
+            @@media (max-width: 700px) {
+                .navbar {
+                    padding: 17px 5%;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                }
+
+                .nav-links {
+                    display: none;
+                }
+
+                .hero {
+                    min-height: 500px;
+                    padding: 75px 6%;
+                }
+
+                    .hero h1 {
+                        font-size: 43px;
+                    }
+
+                .trust-bar {
+                    grid-template-columns: 1fr;
+                }
+
+                .search-panel {
+                    margin: -25px 5% 0;
+                    grid-template-columns: 1fr;
+                }
+
+                .venue-grid,
+                .steps-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .section {
+                    padding: 65px 5%;
+                }
+
+                .section-heading h2 {
+                    font-size: 30px;
+                }
+
+                .secondary-btn {
+                    margin: 12px 0 0;
+                }
+            }
+    </style>
+</head>
+
+<body>
+
+   
+
+    <!-- HERO -->
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-tag">
+                <i class="bi bi-stars"></i> YOUR EVENT, YOUR PERFECT PLACE
+            </div>
+
+            <h1>
+                Find the Perfect Venue
+                for Your <span>Special Moments.</span>
+            </h1>
+
+            <p>
+                Discover beautiful banquet halls, wedding lawns and event spaces.
+                Explore venues, compare prices and book your perfect destination
+                with EventVenue.
+            </p>
+
+            <a href="#venues" class="primary-btn">
+                Explore Venues <i class="bi bi-arrow-right"></i>
+            </a>
+
+            @if (!isLoggedIn)
+            {
+                <a asp-controller="User" asp-action="Register" class="secondary-btn">
+                    Create Account
+                </a>
+            }
+        </div>
+    </section>
+
+    <!-- SEARCH PANEL -->
+
+    <div class="search-panel">
+        <div class="search-field">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput"
+                   placeholder="Search venue or location..." />
+        </div>
+
+        <div class="search-field">
+            <i class="bi bi-building"></i>
+            <select id="typeFilter">
+                <option value="">All Venue Types</option>
+                @foreach (var type in venues
+                    .Where(v => v.IsAvailable)
+                    .Select(v => v.VenueType)
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .Distinct()
+                    .OrderBy(t => t))
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+
+        <div class="search-field">
+            <i class="bi bi-sort-down"></i>
+            <select id="sortFilter">
+                <option value="default">Sort By</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+                <option value="capacity">Capacity</option>
+            </select>
+        </div>
+
+        <button type="button" class="search-button" onclick="filterVenues()">
+            Search
+        </button>
+    </div>
+
+    <!-- TRUST BAR -->
+
+    <section class="trust-bar">
+        <div class="trust-item">
+            <div class="trust-icon"><i class="bi bi-buildings"></i></div>
+            <div>
+                <strong>Multiple Venues</strong>
+                <small>Explore different event spaces</small>
+            </div>
+        </div>
+
+        <div class="trust-item">
+            <div class="trust-icon"><i class="bi bi-shield-check"></i></div>
+            <div>
+                <strong>Easy Booking</strong>
+                <small>Simple and convenient process</small>
+            </div>
+        </div>
+
+        <div class="trust-item">
+            <div class="trust-icon"><i class="bi bi-calendar-check"></i></div>
+            <div>
+                <strong>Plan Your Event</strong>
+                <small>Find a space for your occasion</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- VENUES -->
+
+    <section class="section venue-section" id="venues">
+        <div class="section-heading">
+            <span class="eyebrow">Explore Our Collection</span>
+            <h2>Discover Beautiful Venues</h2>
+            <p>Find a space that makes your celebration unforgettable.</p>
+        </div>
+
+        <div class="venue-grid" id="venueGrid">
+            @foreach (var venue in venues.Where(v => v.IsAvailable))
+            {
+                <article class="venue-card"
+                         data-name="@venue.VenueName"
+                         data-location="@venue.Location"
+                         data-type="@venue.VenueType"
+                         data-price="@venue.Price"
+                         data-capacity="@venue.Capacity">
+
+                    <div class="venue-image">
+                        @if (!string.IsNullOrWhiteSpace(venue.ImageUrl))
+                        {
+                            <img src="@venue.ImageUrl"
+                                 alt="@venue.VenueName"
+                                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80';" />
+                        }
+                        else
+                        {
+                            <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"
+                                 alt="Event venue" />
+                        }
+
+                        <span class="venue-type">@venue.VenueType</span>
+                    </div>
+
+                    <div class="venue-content">
+                        <h3>@venue.VenueName</h3>
+
+                        <div class="venue-location">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            @venue.Location
+                        </div>
+
+                        <div class="venue-info">
+                            <div>
+                                <i class="bi bi-people"></i> Capacity
+                                <strong>@venue.Capacity Guests</strong>
+                            </div>
+
+                            <div>
+                                <i class="bi bi-check-circle"></i> Availability
+                                <strong>Available</strong>
+                            </div>
+                        </div>
+
+                        <div class="venue-bottom">
+                            <div class="venue-price">
+                                ₹@venue.Price.ToString("N0")
+                                <small>/ booking</small>
+                            </div>
+
+                            <a asp-controller="User"
+                               asp-action="VenueDetails"
+                               asp-route-id="@venue.VenueId"
+                               class="details-btn">
+                                View Details <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            }
+
+            <div class="empty-message" id="noVenues" style="display:none;">
+                <i class="bi bi-search" style="font-size:35px;"></i>
+                <h3>No venues found</h3>
+                <p>Try changing your search or filter.</p>
+            </div>
+
+            @if (!venues.Any(v => v.IsAvailable))
+            {
+                <div class="empty-message">
+                    <i class="bi bi-buildings" style="font-size:35px;"></i>
+                    <h3>No venues available right now</h3>
+                    <p>Please check again later.</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+
+    <section class="section steps-section" id="how-it-works">
+        <div class="section-heading">
+            <span class="eyebrow">Simple Process</span>
+            <h2>How EventVenue Works</h2>
+            <p>Book your ideal venue in three simple steps.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h3>01. Explore Venues</h3>
+                <p>Browse different venues and discover the right place for your event.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="bi bi-calendar2-check"></i>
+                </div>
+                <h3>02. Submit Booking</h3>
+                <p>Register or log in, select your event date and submit your booking request.</p>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h3>03. Enjoy Your Event</h3>
+                <p>Track your booking status and get ready for your special occasion.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to Plan Your Special Event?</h2>
+            <p>Explore amazing venues and make your celebration memorable.</p>
+
+            @if (isLoggedIn)
+            {
+                <a href="#venues">Explore Venues <i class="bi bi-arrow-right"></i></a>
+            }
+            else
+            {
+                <a asp-controller="User" asp-action="Register">
+                    Join EventVenue <i class="bi bi-arrow-right"></i>
+                </a>
+            }
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <div class="footer-brand">
+                    <i class="bi bi-buildings-fill"></i> EventVenue
+                </div>
+                <p>
+                    Your destination for discovering and booking beautiful
+                    venues for weddings, parties and special occasions.
+                </p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#venues">Explore Venues</a>
+                <a href="#how-it-works">How It Works</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Account</h4>
+                @if (isLoggedIn)
+                {
+                    <a asp-controller="User" asp-action="Logout">Logout</a>
+                }
+                else
+                {
+                    <a asp-controller="User" asp-action="Login">Login</a>
+                    <a asp-controller="User" asp-action="Register">Register</a>
+                }
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            © @DateTime.Now.Year EventVenue. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT SEARCH AND FILTER -->
+
+    <script>
+            function filterVenues() {
+                const search = document.getElementById("searchInput").value.toLowerCase();
+                const type = document.getElementById("typeFilter").value.toLowerCase();
+                const sort = document.getElementById("sortFilter").value;
+
+                const grid = document.getElementById("venueGrid");
+                const cards = Array.from(grid.querySelectorAll(".venue-card"));
+
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const name = (card.dataset.name || "").toLowerCase();
+                    const location = (card.dataset.location || "").toLowerCase();
+                    const venueType = (card.dataset.type || "").toLowerCase();
+
+                    const matchesSearch =
+                        name.includes(search) || location.includes(search);
+
+                    const matchesType =
+                        type === "" || venueType === type;
+
+                    const show = matchesSearch && matchesType;
+
+                    card.style.display = show ? "" : "none";
+
+                    if (show) visibleCount++;
+                });
+
+                if (sort === "low") {
+                    cards.sort((a, b) =>
+                        Number(a.dataset.price) - Number(b.dataset.price));
+                }
+                else if (sort === "high") {
+                    cards.sort((a, b) =>
+                        Number(b.dataset.price) - Number(a.dataset.price));
+                }
+                else if (sort === "capacity") {
+                    cards.sort((a, b) =>
+                        Number(b.dataset.capacity) - Number(a.dataset.capacity));
+                }
+
+                cards.forEach(card => grid.appendChild(card));
+
+                document.getElementById("noVenues").style.display =
+                    visibleCount === 0 ? "block" : "none";
+            }
+
+            document.getElementById("searchInput")
+                .addEventListener("input", filterVenues);
+
+            document.getElementById("typeFilter")
+                .addEventListener("change", filterVenues);
+
+            document.getElementById("sortFilter")
+                .addEventListener("change", filterVenues);
+    </script>
+
+</body>
+</html>

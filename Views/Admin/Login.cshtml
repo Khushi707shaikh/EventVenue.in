@@ -1,0 +1,60 @@
+﻿<CodeBlock language="html" editable>
+    @{
+        ViewData["Title"] = "Admin Login";
+    }
+
+    <div class="container py-5">
+        <div class="card shadow-sm mx-auto p-4"
+             style="max-width: 430px; border-radius: 15px;">
+
+            <h2 class="text-center mb-2">Admin Login</h2>
+
+            <p class="text-center text-muted mb-4">
+                Sign in to manage EventVenue.
+            </p>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.Error
+                </div>
+            }
+
+            <form asp-controller="Admin"
+                  asp-action="Login"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">
+                        Username
+                    </label>
+
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           class="form-control"
+                           placeholder="Enter admin username"
+                           required />
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">
+                        Password
+                    </label>
+
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Enter admin password"
+                           required />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
